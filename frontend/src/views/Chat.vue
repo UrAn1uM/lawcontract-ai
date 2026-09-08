@@ -5,9 +5,9 @@
         <div v-for="(m, i) in messages" :key="i" class="chat-bubble" :class="m.role">
           {{ m.content }}
         </div>
-        <div v-if="thinking" class="chat-bubble assistant" style="color: #909399">正在检索知识库并思考…</div>
+        <div v-if="thinking" class="chat-bubble assistant" style="color: #8A8A8A">正在检索知识库并思考…</div>
       </div>
-      <div style="display: flex; gap: 10px; padding-top: 12px; border-top: 1px solid #e4e7ed">
+      <div style="display: flex; gap: 10px; padding-top: 12px; border-top: 1px solid #d9d9d9">
         <el-input
           v-model="input"
           placeholder="例如：数据出境需要满足什么条件？保密条款怎么写？"

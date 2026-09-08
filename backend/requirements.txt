@@ -10,7 +10,7 @@ langchain-openai>=0.2,<0.3
 langchain-community>=0.3,<0.4
 openai>=1.40
 faiss-cpu>=1.8
-# sentence-transformers>=3.0  # 可选：本地语义向量模型（会拉 torch 约2.5GB）。不装则自动降级为哈希向量
+sentence-transformers>=3.0
 
 rank-bm25>=0.2.2
 jieba>=0.42.1

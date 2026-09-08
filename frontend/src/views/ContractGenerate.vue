@@ -39,7 +39,7 @@
               :closable="false"
               style="margin-bottom: 12px"
             />
-            <div class="contract-text card-box" style="border: 1px solid #e4e7ed">{{ result.contract_text }}</div>
+            <div class="contract-text card-box" style="border: 1px solid #d9d9d9">{{ result.contract_text }}</div>
           </template>
         </el-card>
       </el-col>

@@ -15,7 +15,7 @@ class Settings(BaseSettings):
     # LLM（DeepSeek 兼容 OpenAI 协议）
     LLM_API_KEY: str = ""
     LLM_BASE_URL: str = "https://api.deepseek.com/v1"
-    LLM_MODEL: str = "deepseek-chat"
+    LLM_MODEL: str = "deepseek-v4-pro"
 
     # Embedding：本地中文向量模型
     EMBEDDING_MODEL: str = "BAAI/bge-small-zh-v1.5"

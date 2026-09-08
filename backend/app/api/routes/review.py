@@ -1,11 +1,11 @@
-"""合同审查路由：风险审查 / 历史报告。"""
+"""合同审查路由：发起审查 / 进度查询 / 历史报告。"""
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app import models
 from app.api.deps import get_current_user
 from app.core.database import get_db
-from app.services.review_service import serialize_report
+from app.services.review_service import get_progress, serialize_report, start_review
 
 router = APIRouter(prefix="/review", tags=["合同审查"])
 
@@ -26,13 +26,24 @@ def review_contract(
     user: models.User = Depends(get_current_user),
     db: Session = Depends(get_db),
 ):
-    """执行风险审查。review_type: risk / compliance（延迟导入避免启动时加载重依赖）。"""
-    from app.services.review_service import review_contract as run
-
-    contract = _get_owned_contract(db, user, contract_id)
+    """发起风险审查，后台异步执行，立即返回 task_id，前端据此轮询进度。"""
+    _get_owned_contract(db, user, contract_id)
     if review_type not in ("risk", "compliance"):
         raise HTTPException(400, "review_type 仅支持 risk / compliance")
-    return run(db, contract, review_type)
+    task_id = start_review(contract_id, user.id, review_type)
+    return {"task_id": task_id}
+
+
+@router.get("/progress/{task_id}")
+def review_progress(
+    task_id: str,
+    user: models.User = Depends(get_current_user),
+):
+    """查询审查任务进度：status(running/done/error)、total、done、current、result。"""
+    task = get_progress(task_id)
+    if not task:
+        raise HTTPException(404, "任务不存在或已过期")
+    return task
 
 
 @router.get("/reports/{contract_id}")

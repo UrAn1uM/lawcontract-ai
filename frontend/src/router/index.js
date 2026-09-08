@@ -13,7 +13,8 @@ const routes = [
       { path: 'generate', component: () => import('../views/ContractGenerate.vue'), meta: { title: '合同生成' } },
       { path: 'compare', component: () => import('../views/ContractCompare.vue'), meta: { title: '条款比对' } },
       { path: 'chat', component: () => import('../views/Chat.vue'), meta: { title: '智能问答' } },
-      { path: 'knowledge', component: () => import('../views/KnowledgeAdmin.vue'), meta: { title: '知识库管理' } }
+      { path: 'knowledge', component: () => import('../views/KnowledgeAdmin.vue'), meta: { title: '知识库管理' } },
+      { path: 'profile', component: () => import('../views/Profile.vue'), meta: { title: '个人中心' } }
     ]
   }
 ]

@@ -18,6 +18,10 @@ export async function reviewContract(contractId, reviewType = 'risk') {
   return request.post(`/review/${contractId}?review_type=${reviewType}`, {})
 }
 
+export async function fetchReviewProgress(taskId) {
+  return request.get(`/review/progress/${taskId}`)
+}
+
 export async function fetchReports(contractId) {
   return request.get(`/review/reports/${contractId}`)
 }

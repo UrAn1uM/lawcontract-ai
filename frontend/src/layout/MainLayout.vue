@@ -1,34 +1,24 @@
 <template>
-  <el-container style="height: 100vh">
-    <el-aside width="210px" style="background: #1d2b3a">
-      <div class="logo">法律合同智能系统</div>
-      <el-menu
-        :default-active="$route.path"
-        router
-        background-color="#1d2b3a"
-        text-color="#c0c8d0"
-        active-text-color="#409eff"
-      >
-        <el-menu-item index="/dashboard">工作台</el-menu-item>
-        <el-menu-item index="/review">合同审查</el-menu-item>
-        <el-menu-item index="/generate">合同生成</el-menu-item>
-        <el-menu-item index="/compare">条款比对</el-menu-item>
-        <el-menu-item index="/chat">智能问答</el-menu-item>
-        <el-menu-item index="/knowledge">知识库管理</el-menu-item>
-      </el-menu>
-    </el-aside>
-    <el-container>
-      <el-header style="display: flex; align-items: center; justify-content: space-between; background: #fff; border-bottom: 1px solid #e4e7ed">
-        <span style="font-weight: 500">{{ $route.meta.title || '' }}</span>
-        <div>
-          <span style="margin-right: 16px; color: #606266">{{ username }}</span>
-          <el-button size="small" @click="logout">退出登录</el-button>
-        </div>
-      </el-header>
-      <el-main style="padding: 0">
-        <router-view />
-      </el-main>
-    </el-container>
+  <el-container direction="vertical" class="shell">
+    <el-header class="topbar">
+      <div class="topbar-left">
+        <span class="brand">法律合同智能系统</span>
+        <el-menu mode="horizontal" :default-active="$route.path" router class="nav" :ellipsis="false">
+          <el-menu-item index="/dashboard">工作台</el-menu-item>
+          <el-menu-item index="/review">合同审查</el-menu-item>
+          <el-menu-item index="/generate">合同生成</el-menu-item>
+          <el-menu-item index="/compare">条款比对</el-menu-item>
+          <el-menu-item index="/chat">智能问答</el-menu-item>
+          <el-menu-item index="/knowledge">知识库管理</el-menu-item>
+          <el-menu-item index="/profile">个人中心</el-menu-item>
+        </el-menu>
+      </div>
+      <div class="topbar-right">
+        <span class="username">{{ username }}</span>
+        <el-button size="small" text @click="logout">退出</el-button>
+      </div>
+    </el-header>
+    <el-main class="main"><router-view /></el-main>
   </el-container>
 </template>
 
@@ -48,12 +38,47 @@ function logout() {
 </script>
 
 <style scoped>
-.logo {
-  color: #fff;
-  font-size: 16px;
-  font-weight: 600;
-  text-align: center;
-  padding: 20px 0;
-  letter-spacing: 1px;
+.shell { height: 100vh; }
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  border-bottom: 1px solid #d9d9d9;
+  height: 52px;
+  padding: 0 24px;
 }
+.topbar-left { display: flex; align-items: center; height: 100%; }
+.brand {
+  font-size: 15px;
+  font-weight: 700;
+  color: #000000;
+  letter-spacing: 1px;
+  margin-right: 28px;
+  padding-right: 28px;
+  border-right: 1px solid #d9d9d9;
+}
+
+.nav { border-bottom: none; height: 100%; }
+.nav :deep(.el-menu-item) {
+  height: 52px;
+  line-height: 52px;
+  font-size: 13px;
+  color: #4a4a4a;
+  padding: 0 16px;
+  border-radius: 0;
+  border-bottom: 2px solid transparent;
+}
+.nav :deep(.el-menu-item:hover) { color: #E2231A; }
+.nav :deep(.el-menu-item.is-active) {
+  color: #E2231A;
+  border-bottom-color: #E2231A;
+  font-weight: 500;
+}
+
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.username { color: #8A8A8A; font-size: 13px; }
+
+.main { padding: 0; background: #ffffff; }
 </style>

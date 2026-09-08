@@ -11,22 +11,39 @@ services:
       - "3306:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-proot123"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
 
   backend:
     build: ./backend
     container_name: law-backend
     depends_on:
-      - mysql
+      mysql:
+        condition: service_healthy
     environment:
       DATABASE_URL: mysql+pymysql://root:root123@mysql:3306/law_contract?charset=utf8mb4
       LLM_API_KEY: ${LLM_API_KEY}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.deepseek.com/v1}
+      LLM_MODEL: ${LLM_MODEL:-deepseek-v4-pro}
       SECRET_KEY: ${SECRET_KEY:-change-me}
       EMBEDDING_MODEL: BAAI/bge-small-zh-v1.5
+      HF_ENDPOINT: https://hf-mirror.com
     ports:
       - "8000:8000"
     volumes:
       - vector_data:/app/vector_store
       - uploads_data:/app/uploads
+
+  frontend:
+    build: ./frontend
+    container_name: law-frontend
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
 
 volumes:
   mysql_data:
