@@ -13,4 +13,6 @@ def get_llm(temperature: float = 0.2):
         base_url=settings.LLM_BASE_URL,
         model=settings.LLM_MODEL,
         temperature=temperature,
+        timeout=120,      # 覆盖审查(约34s)与生成(约87s)，避免无限等待
+        max_retries=2,    # 网络抖动/限流自动重试
     )

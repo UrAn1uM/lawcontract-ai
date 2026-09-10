@@ -1,53 +1,62 @@
 <template>
   <div class="page">
-    <el-card class="card-box">
-      <template #header>
-        <div style="display: flex; justify-content: space-between; align-items: center">
-          <span>知识库管理（仅管理员可修改）</span>
-          <el-button type="warning" :loading="rebuilding" @click="doRebuild">重建向量索引</el-button>
-        </div>
-      </template>
+    <section class="block">
+      <div class="block-bar">
+        知识库管理 · 仅管理员可修改
+        <el-button type="warning" :loading="rebuilding" class="rebuild-btn" @click="doRebuild">重建向量索引</el-button>
+      </div>
 
-      <el-tabs v-model="tab">
+      <div class="tabs">
+        <button class="tab" :class="{ on: tab === 'clauses' }" @click="tab = 'clauses'">标准条款库</button>
+        <button class="tab" :class="{ on: tab === 'regulations' }" @click="tab = 'regulations'">法规库</button>
+      </div>
+
+      <div class="block-body">
         <!-- 标准条款库 -->
-        <el-tab-pane label="标准条款库" name="clauses">
-          <el-button size="small" type="primary" @click="openClause()" style="margin-bottom: 12px">新增条款</el-button>
-          <el-table :data="clauses" size="small" border>
+        <template v-if="tab === 'clauses'">
+          <div class="tool-row">
+            <el-button size="small" type="primary" @click="openClause()">新增条款</el-button>
+            <span class="tool-count">共 {{ clauses.length }} 条</span>
+          </div>
+          <el-table :data="clauses" size="small" border class="table">
             <el-table-column prop="title" label="标题" min-width="180" show-overflow-tooltip />
-            <el-table-column prop="category" label="分类" width="100" />
-            <el-table-column label="风险等级" width="90">
+            <el-table-column prop="category" label="分类" width="110" />
+            <el-table-column label="风险等级" width="110" align="center">
               <template #default="{ row }">
-                <el-tag size="small" :type="{ 高: 'danger', 中: 'warning', 低: 'info' }[row.risk_level] || 'info'">{{ row.risk_level }}</el-tag>
+                <span class="risk-tag" :class="riskClass(row.risk_level)">{{ row.risk_level }}</span>
               </template>
             </el-table-column>
             <el-table-column prop="content" label="内容" show-overflow-tooltip />
-            <el-table-column label="操作" width="130">
+            <el-table-column label="操作" width="140" align="center">
               <template #default="{ row }">
                 <el-button size="small" @click="openClause(row)">编辑</el-button>
                 <el-button size="small" type="danger" @click="removeClause(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
-        </el-tab-pane>
+        </template>
 
         <!-- 法规库 -->
-        <el-tab-pane label="法规库" name="regulations">
-          <el-button size="small" type="primary" @click="openReg()" style="margin-bottom: 12px">新增法规</el-button>
-          <el-table :data="regulations" size="small" border>
-            <el-table-column prop="name" label="法规" width="150" />
-            <el-table-column prop="article_no" label="条文" width="90" />
-            <el-table-column prop="jurisdiction" label="辖区" width="80" />
+        <template v-else>
+          <div class="tool-row">
+            <el-button size="small" type="primary" @click="openReg()">新增法规</el-button>
+            <span class="tool-count">共 {{ regulations.length }} 条</span>
+          </div>
+          <el-table :data="regulations" size="small" border class="table">
+            <el-table-column prop="name" label="法规" width="160" />
+            <el-table-column prop="article_no" label="条文" width="100" />
+            <el-table-column prop="jurisdiction" label="辖区" width="90" />
             <el-table-column prop="content" label="内容" show-overflow-tooltip />
-            <el-table-column label="操作" width="130">
+            <el-table-column label="操作" width="140" align="center">
               <template #default="{ row }">
                 <el-button size="small" @click="openReg(row)">编辑</el-button>
                 <el-button size="small" type="danger" @click="removeReg(row)">删除</el-button>
               </template>
             </el-table-column>
           </el-table>
-        </el-tab-pane>
-      </el-tabs>
-    </el-card>
+        </template>
+      </div>
+    </section>
 
     <!-- 条款编辑弹窗 -->
     <el-dialog v-model="clauseDialog" :title="clauseForm.id ? '编辑条款' : '新增条款'" width="640px">
@@ -75,7 +84,7 @@
 
     <!-- 法规编辑弹窗 -->
     <el-dialog v-model="regDialog" :title="regForm.id ? '编辑法规' : '新增法规'" width="640px">
-      <el-form :model="regForm" label-width="80px">
+      <el-form :model="regForm" label-width="90px">
         <el-form-item label="法规名称"><el-input v-model="regForm.name" placeholder="如：个人信息保护法 / GDPR" /></el-form-item>
         <el-form-item label="条文号"><el-input v-model="regForm.article_no" placeholder="如：第十三条" /></el-form-item>
         <el-form-item label="辖区">
@@ -118,6 +127,10 @@ onMounted(load)
 async function load() {
   clauses.value = await fetchClauses()
   regulations.value = await fetchRegulations()
+}
+
+function riskClass(level) {
+  return { 高: 'is-high', 中: 'is-mid', 低: 'is-low' }[level] || 'is-low'
 }
 
 function openClause(row) {
@@ -172,3 +185,49 @@ async function doRebuild() {
   }
 }
 </script>
+
+<style scoped>
+.page { padding: 0; }
+.rebuild-btn { margin-left: auto; }
+
+/* 页签做成色块，紧贴无间距 */
+.tabs { display: flex; border-bottom: var(--sp-line); }
+.tab {
+  border: none;
+  border-right: var(--sp-line);
+  background: var(--sp-white);
+  color: var(--sp-black);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  padding: 13px 28px;
+  cursor: pointer;
+}
+.tab:hover { background: var(--sp-black); color: var(--sp-white); }
+.tab.on { background: var(--sp-red); color: var(--sp-black); }
+
+.block-body { padding: 20px; }
+.tool-row { display: flex; align-items: center; margin-bottom: 16px; }
+.tool-count {
+  margin-left: auto;
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.18em;
+  color: var(--sp-ink-30);
+}
+.table { width: 100%; }
+
+/* 风险等级：纯色块表示 */
+.risk-tag {
+  display: inline-block;
+  border: var(--sp-hair);
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 2px 10px;
+}
+.risk-tag.is-high { background: var(--sp-red); color: var(--sp-black); }
+.risk-tag.is-mid { background: var(--sp-black); color: var(--sp-white); }
+.risk-tag.is-low { background: var(--sp-white); color: var(--sp-ink-30); }
+</style>

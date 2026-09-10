@@ -17,6 +17,14 @@ UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 ALLOWED_EXT = (".docx", ".pdf", ".txt")
 
 
+def _safe_remove(path: str):
+    """解析完即删除临时上传文件，避免 uploads 目录堆积。"""
+    try:
+        os.remove(path)
+    except OSError:
+        pass
+
+
 def _get_owned_contract(db, user, contract_id) -> models.Contract:
     contract = (
         db.query(models.Contract)
@@ -48,6 +56,8 @@ def upload_contract(
         text = parse_document(dest)
     except Exception:
         raise HTTPException(400, "文件解析失败，请确认文件未损坏（扫描件 PDF 暂不支持）")
+    finally:
+        _safe_remove(dest)
     if not text.strip():
         raise HTTPException(400, "未解析到文本内容")
 
@@ -65,23 +75,35 @@ def upload_contract(
 
 @router.get("")
 def list_contracts(user: models.User = Depends(get_current_user), db: Session = Depends(get_db)):
+    """当前用户的全部合同（含审查与生成成果）。
+
+    直接带上报告数量与最新报告的整体风险，供个人中心一次性渲染，
+    避免前端为每份合同各发一次报告查询（N+1）。
+    """
     contracts = (
         db.query(models.Contract)
         .filter_by(owner_id=user.id)
         .order_by(models.Contract.id.desc())
         .all()
     )
-    return [
-        {
-            "id": c.id,
-            "title": c.title,
-            "contract_type": c.contract_type,
-            "status": c.status,
-            "version_count": len(c.versions),
-            "created_at": str(c.created_at or ""),
-        }
-        for c in contracts
-    ]
+    out = []
+    for c in contracts:
+        reports = sorted(c.reports, key=lambda r: r.id, reverse=True)
+        latest = reports[0] if reports else None
+        out.append(
+            {
+                "id": c.id,
+                "title": c.title,
+                "contract_type": c.contract_type,
+                "status": c.status,
+                "version_count": len(c.versions),
+                "created_at": c.created_at.strftime("%Y-%m-%d %H:%M") if c.created_at else "",
+                "report_count": len(reports),
+                "overall_risk": latest.overall_risk if latest else None,
+                "latest_report_id": latest.id if latest else None,
+            }
+        )
+    return out
 
 
 @router.get("/{contract_id}")
@@ -125,6 +147,8 @@ def upload_new_version(
         text = parse_document(dest)
     except Exception:
         raise HTTPException(400, "文件解析失败")
+    finally:
+        _safe_remove(dest)
     if not text.strip():
         raise HTTPException(400, "未解析到文本内容")
 

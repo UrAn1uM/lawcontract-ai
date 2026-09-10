@@ -4,6 +4,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from app import models
 from app.agents.chat_agent import build_chat_agent
 from app.services.llm import get_llm  # noqa: F401  保证未配置 Key 时尽早报错
+from app.services.text_clean import to_plain_text
 
 
 def chat(db, user: models.User, message: str, session_id: int = None) -> dict:
@@ -47,6 +48,9 @@ def chat(db, user: models.User, message: str, session_id: int = None) -> dict:
         answer = f"配置错误：{e}"
     except Exception as e:  # 网络/模型异常不阻断会话
         answer = f"抱歉，智能问答暂时不可用（{e}）。请稍后重试。"
+
+    # 4. 纯文本化：去掉模型爱加的 === ** --- 等 Markdown 装饰符号
+    answer = to_plain_text(answer)
 
     db.add(models.ChatMessage(session_id=session.id, role="assistant", content=answer))
     db.commit()

@@ -1,106 +1,327 @@
 /* ============================================================
-   瑞士国际主义设计系统（Vignelli / Swiss International）
-   黑白 + 单一朱红强调色 · 严格网格 · 0 圆角 · 无阴影 · 表格化
+   瑞士海报风（Swiss Poster）设计系统
+   12 列网格 · border-2 分隔 · gap-0 · 超大无衬线粗体 · 原色色块
+   rounded-none · shadow-none · transition-none · hover 整块反色
    ============================================================ */
 :root {
-  /* 唯一强调色：朱红（法律文书/印章），全站只用这一个 */
-  --el-color-primary: #E2231A;
-  --el-color-primary-light-3: #e74f47;
-  --el-color-primary-light-5: #ee7d78;
-  --el-color-primary-light-7: #f4aeab;
-  --el-color-primary-light-8: #f8c9c7;
-  --el-color-primary-light-9: #fbe6e5;
-  --el-color-primary-dark-2: #b81c14;
+  /* 原色（海报三原色） */
+  --sp-black: #000000;
+  --sp-white: #ffffff;
+  --sp-red: #ff0000;
+  --sp-blue: #0057b8;
+  --sp-yellow: #ffcc00;
+  --sp-gray: #f5f5f5;
+  --sp-ink-70: rgba(0, 0, 0, 0.7);
+  --sp-ink-30: rgba(0, 0, 0, 0.3);
 
-  /* 语义色：Swiss 只用灰度 + 朱红 */
-  --el-color-danger: #E2231A;
-  --el-color-warning: #1a1a1a;
-  --el-color-success: #1a1a1a;
-  --el-color-info: #8A8A8A;
+  --sp-line: 2px solid #000000;
+  --sp-hair: 1px solid #000000;
 
-  /* 设计令牌 */
-  --sw-ink: #000000;      /* 墨黑 */
-  --sw-ground: #ffffff;   /* 纯白 */
-  --sw-accent: #E2231A;   /* 朱红 */
-  --sw-gray: #8A8A8A;     /* 冷灰：次要内容 */
-  --sw-gray-dark: #4a4a4a;
-  --sw-line: #d9d9d9;     /* hairline 分隔线 */
-  --sw-bg: #ffffff;       /* 页面白底 */
+  /* Element Plus 变量：全部直角、无阴影
+     品牌强调色用蓝（冷静、法律行业），红色只保留给"风险/删除"等警示语义 */
+  --el-color-primary: #0057b8;
+  --el-color-primary-light-3: #0057b8;
+  --el-color-primary-light-5: #0057b8;
+  --el-color-primary-light-7: #0057b8;
+  --el-color-primary-light-8: #0057b8;
+  --el-color-primary-light-9: #0057b8;
+  --el-color-primary-dark-2: #000000;
+  --el-color-success: #000000;
+  --el-color-warning: #ffcc00;
+  --el-color-danger: #ff0000;
+  --el-color-error: #ff0000;
+  --el-color-info: #000000;
+
+  --el-border-radius-base: 0;
+  --el-border-radius-small: 0;
+  --el-border-radius-round: 0;
+  --el-border-radius-circle: 0;
+  --el-box-shadow: none;
+  --el-box-shadow-light: none;
+  --el-box-shadow-lighter: none;
+  --el-box-shadow-dark: none;
+  --el-border-color: #000000;
+  --el-border-color-light: #000000;
+  --el-border-color-lighter: #000000;
+  --el-text-color-primary: #000000;
+  --el-text-color-regular: #000000;
+  --el-fill-color-blank: #ffffff;
 }
 
-* { box-sizing: border-box; }
+/* ---------- 基底：直角 + 瞬切，整站无圆角无过渡 ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-radius: 0 !important;
+  transition: none !important;
+}
+
 html, body, #app { height: 100%; margin: 0; }
+
 body {
+  /* 只用无衬线：Helvetica / Akzidenz-Grotesk 传统 */
   font-family: 'Helvetica Neue', Helvetica, Arial, 'PingFang SC', 'Microsoft YaHei', sans-serif;
-  background: var(--sw-bg);
-  color: var(--sw-ink);
+  background: var(--sp-white);
+  color: var(--sp-black);
   font-size: 14px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
 }
 
-.page { padding: 24px; }
+/* 大号粗体：海报的字体基调 */
+h1, h2, h3, h4 { margin: 0; font-weight: 900; letter-spacing: -0.02em; }
 
-/* ============ 基础卡片：0 圆角 · 无阴影 · hairline 边框 ============ */
-.card-box {
-  background: var(--sw-ground);
-  border: 1px solid var(--sw-line);
-  border-radius: 0;
-  padding: 24px;
+/* 标签类文字：大写字距（拉丁部分生效），中文靠字距拉开 */
+.sp-label {
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
 }
 
-/* ============ Element Plus 深度覆盖：全部 0 圆角 · 无阴影 ============ */
-.el-card { border: 1px solid var(--sw-line); border-radius: 0; box-shadow: none; --el-card-border-color: var(--sw-line); }
-.el-card__header { border-bottom: 1px solid var(--sw-line); padding: 14px 24px; }
-.el-card__body { padding: 24px; }
-.el-button { border-radius: 0; }
-.el-input__wrapper, .el-textarea__inner, .el-select__wrapper { border-radius: 0; }
-.el-tag { border-radius: 0; }
-.el-menu { border-radius: 0; }
-.el-message { border-radius: 0; }
-.el-alert { border-radius: 0; }
-.el-steps { border-radius: 0; }
+/* ---------- 区块：border-2 分隔，gap-0 紧贴 ---------- */
+.block {
+  background: var(--sp-white);
+  border: var(--sp-line);
+}
+.block + .block { border-top: none; }
 
-/* ============ 表格：严格基线对齐 · hairline 分隔 · 黑底白字表头 ============ */
-.el-table { --el-table-border-color: var(--sw-line); --el-table-header-bg-color: #1a1a1a; }
+/* 区块标题条：整块黑/红色块 */
+.block-bar {
+  display: flex;
+  align-items: center;
+  background: var(--sp-black);
+  color: var(--sp-white);
+  border-bottom: var(--sp-line);
+  padding: 10px 16px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+.block-bar.red { background: var(--sp-red); color: var(--sp-black); }
+.block-bar.blue { background: var(--sp-blue); color: var(--sp-white); }
+.block-bar.yellow { background: var(--sp-yellow); color: var(--sp-black); }
+
+.block-body { padding: 20px; }
+
+/* 无间距网格：用边框当分隔线 */
+.sp-grid {
+  display: grid;
+  gap: 0;
+  border: var(--sp-line);
+  background: var(--sp-black);
+}
+.sp-grid > * { background: var(--sp-white); }
+.sp-grid > * + * { border-left: var(--sp-line); }
+.g-12 { grid-template-columns: repeat(12, 1fr); }
+.g-1-1 { grid-template-columns: 1fr 1fr; }
+.g-1-2 { grid-template-columns: 1fr 2fr; }
+.g-2-3 { grid-template-columns: 2fr 3fr; }
+.g-3-5 { grid-template-columns: 3fr 5fr; }
+.g-8-4 { grid-template-columns: 8fr 4fr; }
+.g-4-8 { grid-template-columns: 4fr 8fr; }
+.g-3-9 { grid-template-columns: 3fr 9fr; }
+.g-9-3 { grid-template-columns: 9fr 3fr; }
+
+/* 区块内的工具栏：靠边框分隔，不留间距 */
+.sp-bar {
+  display: flex;
+  align-items: stretch;
+  border-bottom: var(--sp-line);
+}
+.sp-bar > * { border-right: var(--sp-hair); }
+.sp-bar > *:last-child { border-right: none; }
+.sp-pad { padding: 20px; }
+.sp-gap-none { margin: 0; padding: 0; }
+
+.col-2 { grid-column: span 2; }
+.col-3 { grid-column: span 3; }
+.col-4 { grid-column: span 4; }
+.col-5 { grid-column: span 5; }
+.col-6 { grid-column: span 6; }
+.col-7 { grid-column: span 7; }
+.col-8 { grid-column: span 8; }
+.col-9 { grid-column: span 9; }
+.col-12 { grid-column: span 12; }
+
+/* 竖排文字（Swiss Poster 特色元素） */
+.sp-vertical {
+  writing-mode: vertical-lr;
+  letter-spacing: 0.3em;
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+/* 可见的 12 列结构网格线 */
+.sp-guides {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  pointer-events: none;
+  z-index: 0;
+}
+.sp-guides span { border-left: 1px solid rgba(0, 0, 0, 0.07); }
+.sp-guides span:first-child { border-left: none; }
+
+/* 页面容器 */
+.page { position: relative; padding: 0; }
+.page-inner { position: relative; z-index: 1; padding: 24px; }
+
+/* ---------- Element Plus 覆盖 ---------- */
+
+/* 按钮：直角 + 2px 黑边 + 瞬切反色 */
+.el-button {
+  border-radius: 0 !important;
+  border: var(--sp-line) !important;
+  background: var(--sp-white) !important;
+  color: var(--sp-black) !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.12em;
+  box-shadow: none !important;
+  transition: none !important;
+}
+.el-button:hover,
+.el-button:focus {
+  background: var(--sp-black) !important;
+  border-color: var(--sp-black) !important;
+  color: var(--sp-white) !important;
+}
+.el-button--primary {
+  background: var(--sp-black) !important;
+  border-color: var(--sp-black) !important;
+  color: var(--sp-white) !important;
+}
+.el-button--primary:hover,
+.el-button--primary:focus {
+  background: var(--sp-blue) !important;
+  border-color: var(--sp-blue) !important;
+  color: var(--sp-white) !important;
+}
+.el-button--warning {
+  background: var(--sp-yellow) !important;
+  border-color: var(--sp-black) !important;
+  color: var(--sp-black) !important;
+}
+.el-button--warning:hover {
+  background: var(--sp-black) !important;
+  color: var(--sp-white) !important;
+}
+.el-button--danger {
+  background: var(--sp-red) !important;
+  border-color: var(--sp-black) !important;
+  color: var(--sp-black) !important;
+}
+.el-button--danger:hover { background: var(--sp-black) !important; color: var(--sp-white) !important; }
+.el-button.is-link {
+  border: none !important;
+  background: transparent !important;
+  color: var(--sp-black) !important;
+  padding: 0 6px !important;
+  text-decoration: underline;
+}
+.el-button.is-link:hover { color: var(--sp-red) !important; background: transparent !important; }
+.el-button.is-disabled,
+.el-button.is-disabled:hover {
+  background: var(--sp-gray) !important;
+  border-color: var(--sp-ink-30) !important;
+  color: var(--sp-ink-30) !important;
+}
+
+/* 输入框：只保留底部 2px 黑线 */
+.el-input__wrapper,
+.el-textarea__inner,
+.el-select__wrapper {
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  border-bottom: var(--sp-line) !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+.el-textarea__inner {
+  border: var(--sp-line) !important;
+  padding: 10px 12px !important;
+}
+.el-input__wrapper.is-focus,
+.el-textarea__inner:focus,
+.el-select__wrapper.is-focused {
+  border-bottom: var(--sp-line) !important;
+  box-shadow: none !important;
+}
+.el-input__inner,
+.el-textarea__inner,
+.el-select__placeholder { font-weight: 700; color: var(--sp-black); }
+.el-input__inner::placeholder,
+.el-textarea__inner::placeholder { color: var(--sp-ink-30); font-weight: 400; }
+
+/* 卡片 / 弹窗：直角 + 2px 黑边 + 无阴影 */
+.el-card,
+.el-dialog,
+.el-message-box,
+.el-message,
+.el-popper,
+.el-dropdown-menu,
+.el-select-dropdown {
+  border-radius: 0 !important;
+  border: var(--sp-line) !important;
+  box-shadow: none !important;
+}
+.el-card__header { border-bottom: var(--sp-line) !important; padding: 12px 16px; font-weight: 900; }
+.el-card__body { padding: 20px; }
+.el-dialog__header { border-bottom: var(--sp-line); margin: 0; padding: 14px 20px; }
+.el-dialog__title { font-weight: 900; letter-spacing: 0.08em; }
+.el-dialog__body { padding: 20px; }
+.el-dialog__footer { border-top: var(--sp-line); padding: 14px 20px; }
+
+/* 表格：黑底白字表头 + 2px 外框 */
+.el-table {
+  --el-table-border-color: #000000;
+  --el-table-header-bg-color: #000000;
+  --el-table-header-text-color: #ffffff;
+  --el-table-row-hover-bg-color: #f5f5f5;
+  border: var(--sp-line) !important;
+}
 .el-table th.el-table__cell {
-  background: #1a1a1a;
-  color: #ffffff;
-  font-weight: 500;
-  font-size: 13px;
-  border-bottom: none;
+  background: var(--sp-black) !important;
+  color: var(--sp-white) !important;
+  font-weight: 900 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-bottom: var(--sp-line) !important;
 }
-.el-table td.el-table__cell { border-bottom: 1px solid var(--sw-line); }
-.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell { background: #f7f7f7; }
-
-/* ============ section header：大胆色条承载（Swiss signature） ============ */
-.section-bar {
-  background: #1a1a1a;
-  color: #ffffff;
-  padding: 10px 24px;
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 1px;
+.el-table td.el-table__cell {
+  border-bottom: var(--sp-hair) !important;
+  color: var(--sp-black);
 }
-.section-bar.accent { background: var(--sw-accent); }
-
-/* ============ 聊天页 ============ */
-.chat-area { display: flex; flex-direction: column; height: calc(100vh - 150px); }
-.chat-messages { flex: 1; overflow-y: auto; padding: 10px 0; }
-.chat-bubble {
-  max-width: 75%;
-  margin: 8px 12px;
-  padding: 10px 14px;
-  border-radius: 0;
-  line-height: 1.6;
-  white-space: pre-wrap;
-  word-break: break-word;
+.el-table--striped .el-table__body tr.el-table__row--striped td.el-table__cell {
+  background: var(--sp-gray) !important;
 }
-.chat-bubble.user { background: #1a1a1a; color: #fff; margin-left: auto; }
-.chat-bubble.assistant { background: #fff; border: 1px solid var(--sw-line); }
 
-/* 合同正文展示 */
-.contract-text { white-space: pre-wrap; line-height: 1.8; max-height: 480px; overflow-y: auto; }
+/* 标签 / 分页 / 步骤：直角 */
+.el-tag {
+  border-radius: 0 !important;
+  border: var(--sp-hair) !important;
+  background: var(--sp-white) !important;
+  color: var(--sp-black) !important;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+}
+.el-tabs__item { font-weight: 900; letter-spacing: 0.08em; }
+.el-tabs__item.is-active { color: var(--sp-black); }
+.el-tabs__active-bar { background: var(--sp-red); height: 4px; }
+.el-tabs__nav-wrap::after { background: var(--sp-black); height: 2px; }
+.el-radio__inner, .el-checkbox__inner { border-radius: 0 !important; border: var(--sp-line) !important; }
+.el-radio__input.is-checked .el-radio__inner { background: var(--sp-red); border-color: var(--sp-black); }
+.el-loading-mask { background: rgba(255, 255, 255, 0.86); }
+.el-progress-bar__outer, .el-progress-bar__inner { border-radius: 0 !important; }
 
-/* 次要文字统一冷灰 */
-.muted, .sub { color: var(--sw-gray); }
+/* ---------- 通用文本工具 ---------- */
+.muted { color: var(--sp-ink-30); }
+.strong { font-weight: 900; }
+.sp-hr { border: none; border-top: var(--sp-line); margin: 0; }

@@ -200,7 +200,7 @@ def serialize_report(report: models.ReviewReport) -> dict:
         "review_type": report.review_type,
         "overall_risk": report.overall_risk,
         "summary": report.summary,
-        "created_at": str(report.created_at or ""),
+        "created_at": report.created_at.strftime("%Y-%m-%d %H:%M") if report.created_at else "",
         "items": [
             {
                 "id": item.id,

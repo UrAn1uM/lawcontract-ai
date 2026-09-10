@@ -27,9 +27,18 @@ def generate_contract(db, answers: dict, user: models.User) -> dict:
         "message": "必备条款齐全" if not missing else f"缺少必备条款：{'、'.join(missing)}",
     }
 
+    ctype = (answers.get("contract_type") or "其他").strip()
+    # 合同类型本身常已带「合同 / 协议 / 书」，避免出现「……合同合同」
+    if not ctype:
+        title = "生成的合同"
+    elif ctype.endswith(("合同", "协议", "书", "范本", "文本")):
+        title = f"生成的{ctype}"
+    else:
+        title = f"生成的{ctype}合同"
+
     contract = models.Contract(
         owner_id=user.id,
-        title=f"生成的{answers.get('contract_type', '')}合同",
+        title=title,
         contract_type=answers.get("contract_type", "其他"),
         status="generated",
     )

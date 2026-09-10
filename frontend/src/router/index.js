@@ -6,13 +6,12 @@ const routes = [
   {
     path: '/',
     component: MainLayout,
-    redirect: '/dashboard',
+    redirect: '/welcome',
     children: [
-      { path: 'dashboard', component: () => import('../views/Dashboard.vue'), meta: { title: '工作台' } },
+      { path: 'welcome', component: () => import('../views/Welcome.vue'), meta: { title: '首页' } },
       { path: 'review', component: () => import('../views/ContractReview.vue'), meta: { title: '合同审查' } },
       { path: 'generate', component: () => import('../views/ContractGenerate.vue'), meta: { title: '合同生成' } },
       { path: 'compare', component: () => import('../views/ContractCompare.vue'), meta: { title: '条款比对' } },
-      { path: 'chat', component: () => import('../views/Chat.vue'), meta: { title: '智能问答' } },
       { path: 'knowledge', component: () => import('../views/KnowledgeAdmin.vue'), meta: { title: '知识库管理' } },
       { path: 'profile', component: () => import('../views/Profile.vue'), meta: { title: '个人中心' } }
     ]

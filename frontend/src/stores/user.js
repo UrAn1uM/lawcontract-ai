@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+import { useWorkspaceStore } from './workspace'
 
 export const useUserStore = defineStore('user', {
   state: () => ({
@@ -17,6 +18,8 @@ export const useUserStore = defineStore('user', {
       this.username = ''
       localStorage.removeItem('token')
       localStorage.removeItem('username')
+      // 退出即清空审查工作区（已审查的报告与生成的合同仍在「个人中心」）
+      useWorkspaceStore().clear()
     }
   }
 })

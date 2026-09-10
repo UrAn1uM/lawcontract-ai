@@ -8,6 +8,10 @@ export async function fetchContracts() {
   return request.get('/contracts')
 }
 
+export async function fetchContract(contractId) {
+  return request.get(`/contracts/${contractId}`)
+}
+
 export async function uploadContract(formData) {
   return request.post('/contracts/upload', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
